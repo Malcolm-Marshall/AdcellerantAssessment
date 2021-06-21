@@ -23,3 +23,19 @@ const seed = (data) => {
 };
 
 seed(data);
+
+
+const getData = (req, res) => {
+
+  connection.query('SELECT * FROM productData', function(err, result) {
+    if (err) {
+      console.log(err)
+      res.status(400).send(err);
+    };
+    res.status(200).send(result)
+  })
+};
+
+module.exports = {
+  getData,
+}
