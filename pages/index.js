@@ -9,7 +9,8 @@ import { ResponsiveBar } from '@nivo/bar';
 
 function HomePage() {
 
-  const [data, setData] = useState([])
+  const [data, setData] = useState([]);
+  const [amazon, setAmazon] = useState([])
 
   useEffect(() => {
     getData();
@@ -20,7 +21,14 @@ function HomePage() {
       .then((res) => {
         setData(res.data.slice(0, 650));
       }).catch((err) => console.log(err))
-  }
+  };
+
+  // const getPlatforms = () => {
+  //   axios.get('/api/getPlatform')
+  //     .then((res) => {
+  //       setAmazon(res.data.slice(0, 130));
+  //     }).catch((err) => console.log(err))
+  // }
 
   let data1 = [
     {

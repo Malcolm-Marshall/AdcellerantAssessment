@@ -31,7 +31,7 @@ const ByProduct = ({ data }) => {
     finalDataFormat.push(formatObj);
   }
 
-
+console.log(finalDataFormat)
     return (
     <ResponsiveBar
       data={finalDataFormat}
@@ -93,7 +93,7 @@ const ByProduct = ({ data }) => {
         tickRotation: 0,
         legend: 'Amount',
         legendPosition: 'middle',
-        legendOffset: -40
+        legendOffset: -55
       }}
       labelSkipWidth={12}
       labelSkipHeight={12}
