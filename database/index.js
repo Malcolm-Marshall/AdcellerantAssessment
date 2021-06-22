@@ -46,10 +46,17 @@ const getAmazon = (req, res) => {
 };
 
 const getDates = (req, res) => {
-  connection.query()
+  connection.query('SELECT DISTINCT date FROM productData', function(err, result) {
+    if (err) {
+      console.log(err);
+      res.status(400).send(err);
+    };
+    res.status(200).send(result);
+  })
 }
 
 module.exports = {
   getData,
-  getAmazon
+  getAmazon,
+  getDates
 }

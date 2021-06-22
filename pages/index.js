@@ -14,9 +14,12 @@ function HomePage() {
   const [data, setData] = useState([]);
   const [product, setProduct] = useState(false);
   const [platform, setPlatform] = useState(false);
+  const [timeline, setTimeline] = useState(false);
+  const [dates, setDates] = useState([]);
 
   useEffect(() => {
     getData();
+    getDates();
   }, [])
 
   const getData = () => {
@@ -26,16 +29,35 @@ function HomePage() {
       }).catch((err) => console.log(err))
   };
 
+  const getDates = () => {
+    axios.get('/api/getDates')
+    .then((res) => {
+      setDates(res.data);
+    })
+    .catch((err) => console.log(err))
+  }
+
   const view = (e) => {
     if (e.target.id === 'product') {
       setProduct(true);
       setPlatform(false);
+      setTimeline(false);
     } else if (e.target.id === 'platform') {
       setPlatform(true);
       setProduct(false);
+      setTimeline(false);
     } else if (e.target.id === 'all') {
       setPlatform(true);
       setProduct(true);
+      setTimeline(true);
+    } else if (e.target.id === 'timeline') {
+      setTimeline(true);
+      setPlatform(false);
+      setProduct(false);
+    } else if (e.target.id === 'home') {
+      setTimeline(false);
+      setPlatform(false);
+      setProduct(false);
     }
   }
 
@@ -43,7 +65,10 @@ function HomePage() {
     <Container>
       <Row>
         <Col style={{display: 'flex', justifyContent: 'center', paddingTop: 10, alignContent: 'space-between'}}>
-          Products A-Z
+          <h2>Products A-Z</h2>
+        </Col>
+        <Col style={{display: 'flex', justifyContent: 'flex-end', paddingTop: 10}}>
+          <h3 id="home" onClick={(e) => view(e)}>Home</h3>
         </Col>
         <Col style={{ display: 'flex', justifyContent: 'flex-end', paddingTop: 10 }}>
           <Dropdown>
@@ -53,6 +78,7 @@ function HomePage() {
             <Dropdown.Menu>
               <Dropdown.Item href="#/action-1" id="product" onClick={(e) => view(e)}>Product</Dropdown.Item>
               <Dropdown.Item href="#/action-2" id="platform" onClick={(e) => view(e)}>Platform</Dropdown.Item>
+              <Dropdown.Item href="#/action-2" id="timeline" onClick={(e) => view(e)}>Timeline</Dropdown.Item>
               <Dropdown.Item href="#/action-3" id="all" onClick={(e) => view(e)}>All</Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
@@ -73,11 +99,11 @@ function HomePage() {
           </Col>
         </Row> : null
       }
-      <Row>
+      {timeline ? <Row>
         <Col style={{ height: '700px' }}>
-          <Test data={data} />
+          <Test data={data} dates={dates}/>
         </Col>
-      </Row>
+      </Row> : null}
     </Container>
   )
 }
