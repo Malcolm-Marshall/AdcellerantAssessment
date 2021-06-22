@@ -26,7 +26,6 @@ seed(data);
 
 
 const getData = (req, res) => {
-
   connection.query('SELECT * FROM productData', function(err, result) {
     if (err) {
       console.log(err)
@@ -36,6 +35,17 @@ const getData = (req, res) => {
   })
 };
 
+const getAmazon = (req, res) => {
+  connection.query(`SELECT * FROM productData WHERE platform="Amazon"`, function(err, result) {
+    if (err) {
+      console.log(err);
+      res.status(400).send(err);
+    };
+    res.status(200).send(result);
+  });
+}
+
 module.exports = {
   getData,
+  getAmazon
 }

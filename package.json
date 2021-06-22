@@ -20,16 +20,18 @@
   },
   "homepage": "https://github.com/Malcolm-Marshall/AdcellerantAssessment#readme",
   "dependencies": {
+    "@nivo/bar": "^0.70.1",
     "axios": "^0.21.1",
     "bootstrap": "^5.0.1",
     "bootswatch": "^5.0.1",
-    "chartist": "^0.11.4",
+    "chart.js": "^3.3.2",
     "mysql": "^2.18.1",
     "next": "^11.0.0",
+    "nivo": "^0.31.0",
     "nodemon": "^2.0.7",
-    "pg": "^8.6.0",
-    "react": "^17.0.2",
+    "react": "^17.0.0",
     "react-bootstrap": "^1.6.1",
+    "react-charts": "*",
     "react-dom": "^17.0.2"
   }
 }
