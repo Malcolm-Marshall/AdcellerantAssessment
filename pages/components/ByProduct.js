@@ -31,7 +31,6 @@ const ByProduct = ({ data }) => {
     finalDataFormat.push(formatObj);
   }
 
-console.log(finalDataFormat)
     return (
     <ResponsiveBar
       data={finalDataFormat}

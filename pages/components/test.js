@@ -1,214 +1,187 @@
+import React, { Component, useState, useEffect } from 'react'
+import range from 'lodash/range'
+import last from 'lodash/last'
+import { withKnobs, boolean, select } from '@storybook/addon-knobs'
+import { Defs, linearGradientDef } from '@nivo/core'
+import { area, curveMonotoneX } from 'd3-shape'
+import * as time from 'd3-time'
+import { timeFormat } from 'd3-time-format'
+import { Line } from '@nivo/line';
 
-import { ResponsiveBar } from '@nivo/bar';
-// make sure parent container have a defined height when using
-// responsive component, otherwise height will be 0 and
-// no chart will be rendered.
-// website examples showcase many properties,
-// you'll often use just a few of them.
-const MyResponsiveBar = () => {
+const commonProperties = {
+    width: 900,
+    height: 400,
+    margin: { top: 20, right: 20, bottom: 60, left: 80 },
+    animate: true,
+    enableSlices: 'x',
+}
 
-  let data = [
-    {
-      "country": "AD",
-      "hot dog": 62,
-      "hot dogColor": "hsl(248, 70%, 50%)",
-      "burger": 133,
-      "burgerColor": "hsl(197, 70%, 50%)",
-      "sandwich": 87,
-      "sandwichColor": "hsl(353, 70%, 50%)",
-      "kebab": 147,
-      "kebabColor": "hsl(323, 70%, 50%)",
-      "fries": 169,
-      "friesColor": "hsl(271, 70%, 50%)",
-      "donut": 18,
-      "donutColor": "hsl(189, 70%, 50%)"
+const curveOptions = ['linear', 'monotoneX', 'step', 'stepBefore', 'stepAfter']
+
+const CustomSymbol = ({ size, color, borderWidth, borderColor }) => (
+    <g>
+        <circle fill="#fff" r={size / 2} strokeWidth={borderWidth} stroke={borderColor} />
+        <circle
+            r={size / 5}
+            strokeWidth={borderWidth}
+            stroke={borderColor}
+            fill={color}
+            fillOpacity={0.35}
+        />
+    </g>
+);
+
+
+
+
+
+
+const Test = ({ data }) => {
+
+  let formatData =[
+    {id: 'Amazon Clicks',
+     data: []
     },
-    {
-      "country": "AE",
-      "hot dog": 106,
-      "hot dogColor": "hsl(45, 70%, 50%)",
-      "burger": 23,
-      "burgerColor": "hsl(223, 70%, 50%)",
-      "sandwich": 50,
-      "sandwichColor": "hsl(178, 70%, 50%)",
-      "kebab": 189,
-      "kebabColor": "hsl(11, 70%, 50%)",
-      "fries": 78,
-      "friesColor": "hsl(148, 70%, 50%)",
-      "donut": 190,
-      "donutColor": "hsl(327, 70%, 50%)"
+    {id: 'Amazon Impressions',
+     data: []
     },
-    {
-      "country": "AF",
-      "hot dog": 167,
-      "hot dogColor": "hsl(11, 70%, 50%)",
-      "burger": 159,
-      "burgerColor": "hsl(252, 70%, 50%)",
-      "sandwich": 166,
-      "sandwichColor": "hsl(207, 70%, 50%)",
-      "kebab": 124,
-      "kebabColor": "hsl(44, 70%, 50%)",
-      "fries": 39,
-      "friesColor": "hsl(330, 70%, 50%)",
-      "donut": 180,
-      "donutColor": "hsl(263, 70%, 50%)"
+    {id: 'Facebook Clicks',
+     data: []
     },
-    {
-      "country": "AG",
-      "hot dog": 55,
-      "hot dogColor": "hsl(213, 70%, 50%)",
-      "burger": 124,
-      "burgerColor": "hsl(340, 70%, 50%)",
-      "sandwich": 61,
-      "sandwichColor": "hsl(142, 70%, 50%)",
-      "kebab": 89,
-      "kebabColor": "hsl(261, 70%, 50%)",
-      "fries": 113,
-      "friesColor": "hsl(239, 70%, 50%)",
-      "donut": 83,
-      "donutColor": "hsl(231, 70%, 50%)"
+    {id: 'Facebook Impressions',
+     data: []
     },
-    {
-      "country": "AI",
-      "hot dog": 19,
-      "hot dogColor": "hsl(263, 70%, 50%)",
-      "burger": 45,
-      "burgerColor": "hsl(287, 70%, 50%)",
-      "sandwich": 20,
-      "sandwichColor": "hsl(346, 70%, 50%)",
-      "kebab": 115,
-      "kebabColor": "hsl(330, 70%, 50%)",
-      "fries": 127,
-      "friesColor": "hsl(124, 70%, 50%)",
-      "donut": 40,
-      "donutColor": "hsl(347, 70%, 50%)"
+    {id: 'Google Clicks',
+     data: []
     },
-    {
-      "country": "AL",
-      "hot dog": 37,
-      "hot dogColor": "hsl(236, 70%, 50%)",
-      "burger": 154,
-      "burgerColor": "hsl(259, 70%, 50%)",
-      "sandwich": 24,
-      "sandwichColor": "hsl(105, 70%, 50%)",
-      "kebab": 167,
-      "kebabColor": "hsl(78, 70%, 50%)",
-      "fries": 31,
-      "friesColor": "hsl(311, 70%, 50%)",
-      "donut": 54,
-      "donutColor": "hsl(82, 70%, 50%)"
+    {id: 'Google Impressions',
+     data: []
     },
-    {
-      "country": "AM",
-      "hot dog": 116,
-      "hot dogColor": "hsl(135, 70%, 50%)",
-      "burger": 91,
-      "burgerColor": "hsl(223, 70%, 50%)",
-      "sandwich": 161,
-      "sandwichColor": "hsl(34, 70%, 50%)",
-      "kebab": 34,
-      "kebabColor": "hsl(348, 70%, 50%)",
-      "fries": 116,
-      "friesColor": "hsl(13, 70%, 50%)",
-      "donut": 184,
-      "donutColor": "hsl(356, 70%, 50%)"
+    {id: 'LinkedIn Clicks',
+     data: []
+    },
+    {id: 'LinkedIn Impressions',
+     data: []
+    },
+    {id: 'Twitter Clicks',
+     data: []
+    },
+    {id: 'Twitter Impressions',
+     data: []
     }
   ];
 
-  return (
-    <ResponsiveBar
-      data={data}
-      keys={['hot dog', 'burger', 'sandwich', 'kebab', 'fries', 'donut']}
-      indexBy="country"
-      margin={{ top: 50, right: 130, bottom: 50, left: 60 }}
-      padding={0.3}
-      valueScale={{ type: 'linear' }}
-      indexScale={{ type: 'band', round: true }}
-      colors={{ scheme: 'nivo' }}
-      defs={[
-        {
-          id: 'dots',
-          type: 'patternDots',
-          background: 'inherit',
-          color: '#38bcb2',
-          size: 4,
-          padding: 1,
-          stagger: true
-        },
-        {
-          id: 'lines',
-          type: 'patternLines',
-          background: 'inherit',
-          color: '#eed312',
-          rotation: -45,
-          lineWidth: 6,
-          spacing: 10
-        }
-      ]}
-      fill={[
-        {
-          match: {
-            id: 'fries'
-          },
-          id: 'dots'
-        },
-        {
-          match: {
-            id: 'sandwich'
-          },
-          id: 'lines'
-        }
-      ]}
-      borderColor={{ from: 'color', modifiers: [['darker', 1.6]] }}
-      axisTop={null}
-      axisRight={null}
-      axisBottom={{
-        tickSize: 5,
-        tickPadding: 5,
-        tickRotation: 0,
-        legend: 'country',
-        legendPosition: 'middle',
-        legendOffset: 32
-      }}
-      axisLeft={{
-        tickSize: 5,
-        tickPadding: 5,
-        tickRotation: 0,
-        legend: 'food',
-        legendPosition: 'middle',
-        legendOffset: -40
-      }}
-      labelSkipWidth={12}
-      labelSkipHeight={12}
-      labelTextColor={{ from: 'color', modifiers: [['darker', 1.6]] }}
-      legends={[
-        {
-          dataFrom: 'keys',
-          anchor: 'bottom-right',
-          direction: 'column',
-          justify: false,
-          translateX: 120,
-          translateY: 0,
-          itemsSpacing: 2,
-          itemWidth: 100,
-          itemHeight: 20,
-          itemDirection: 'left-to-right',
-          itemOpacity: 0.85,
-          symbolSize: 20,
-          effects: [
-            {
-              on: 'hover',
-              style: {
-                itemOpacity: 1
-              }
-            }
-          ]
-        }
-      ]}
-      animate={true}
-      motionStiffness={90}
-      motionDamping={15}
+  data.forEach((row) => {
+    if (row.platform === 'Amazon') {
+      if (formatData[0].x !== undefined) {
+        formatData[0].y += row.clicks
+      } else {
+        formatData[0].data.push({x: row.date, y:row.clicks})
+      }
+      if (formatData[1].x) {
+        formatData[1].y += row.clicks
+      } else {
+      formatData[1].data.push({x: row.date, y:row.impressions})}}
+    // } else if (row.platform === 'Facebook') {
+    //   formatData[2].data.push({x: row.date, y:row.clicks})
+    //   formatData[3].data.push({x: row.date, y:row.impressions})
+    // } else if (row.platform === 'Google') {
+    //   formatData[4].data.push({x: row.date, y:row.clicks})
+    //   formatData[5].data.push({x: row.date, y:row.impressions})
+    // } else if (row.platform === 'LinkedIn') {
+    //   formatData[6].data.push({x: row.date, y:row.clicks})
+    //   formatData[7].data.push({x: row.date, y:row.impressions})
+    // } else if (row.platform === 'Twitter') {
+    //   formatData[8].data.push({x: row.date, y:row.clicks})
+    //   formatData[9].data.push({x: row.date, y:row.impressions})
+    // }
+  })
+
+  let dataFormat = [
+    {id: 'Clicks', data: []},
+    {id: 'Impressions', data: []}
+  ];
+
+  data.forEach((row) => {
+    if (dataFormat[0].data.x === row.date) {
+      dataFormat[0].data.y += row.clicks;
+    } else {
+      dataFormat[0].data.push({x: row.date, y: row.clicks})
+    }
+    if (dataFormat[1].data.x === row.date) {
+      dataFormat[1].data.y += row.impressions;
+    } else {
+      dataFormat[1].data.push({x: row.date, y: row.impressions})
+    }
+  });
+
+  console.log(dataFormat)
+
+  console.log(formatData)
+  return (<Line
+        {...commonProperties}
+        // data={[
+        //     {
+        //         id: 'fake corp. A',
+        //         data: [
+        //             { x: '2018-01-01', y: 7 },
+        //             { x: '2018-01-02', y: 5 },
+        //             { x: '2018-01-03', y: 11 },
+        //             { x: '2018-01-04', y: 9 },
+        //             { x: '2018-01-05', y: 12 },
+        //             { x: '2018-01-06', y: 16 },
+        //             { x: '2018-01-07', y: 13 },
+        //             { x: '2018-01-08', y: 13 },
+        //         ],
+        //     },
+        //     {
+        //         id: 'fake corp. B',
+        //         data: [
+        //             { x: '2018-01-04', y: 14 },
+        //             { x: '2018-01-05', y: 14 },
+        //             { x: '2018-01-06', y: 15 },
+        //             { x: '2018-01-07', y: 11 },
+        //             { x: '2018-01-08', y: 10 },
+        //             { x: '2018-01-09', y: 12 },
+        //             { x: '2018-01-10', y: 9 },
+        //             { x: '2018-01-11', y: 7 },
+        //         ],
+        //     },
+        // ]}
+        data={dataFormat}
+        xScale={{
+            type: 'time',
+            format: '%Y-%m-%d',
+            useUTC: false,
+            precision: 'day',
+        }}
+        xFormat="time:%Y-%m-%d"
+        yScale={{
+            type: 'linear',
+            stacked: boolean('stacked', false),
+        }}
+        axisLeft={{
+            legend: 'linear scale',
+            legendOffset: 12,
+        }}
+        axisBottom={{
+            format: '%b %d',
+            tickValues: 'every 1 days',
+            legend: 'time scale',
+            legendOffset: -12,
+        }}
+        curve={select('curve', curveOptions, 'linear')}
+        enablePointLabel={true}
+        pointSymbol={CustomSymbol}
+        pointSize={16}
+        pointBorderWidth={1}
+        pointBorderColor={{
+            from: 'color',
+            modifiers: [['darker', 0.3]],
+        }}
+        useMesh={true}
+        enableSlices={false}
     />)
 };
 
-module.exports = MyResponsiveBar;
+module.exports = Test;

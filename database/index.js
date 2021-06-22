@@ -43,6 +43,10 @@ const getAmazon = (req, res) => {
     };
     res.status(200).send(result);
   });
+};
+
+const getDates = (req, res) => {
+  connection.query()
 }
 
 module.exports = {
