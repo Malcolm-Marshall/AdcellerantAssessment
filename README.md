@@ -14,6 +14,10 @@ const login = {
 module.exports = login;
 ```
 
+### To create Database run 
+```
+npm run db
+```
 
 ### To seed database, in your terminal run 
 
