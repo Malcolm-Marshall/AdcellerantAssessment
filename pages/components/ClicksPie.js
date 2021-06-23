@@ -1,8 +1,6 @@
 import React from 'react'
-import { storiesOf } from '@storybook/react'
 import { withKnobs, boolean } from '@storybook/addon-knobs'
 import { animated } from '@react-spring/web'
-import { generateProgrammingLanguageStats } from '@nivo/generators'
 import { Pie } from '@nivo/pie';
 
 const commonProperties = {
@@ -12,28 +10,6 @@ const commonProperties = {
   animate: true,
   activeOuterRadiusOffset: 8,
 }
-
-const legends = [
-  {
-    anchor: 'bottom',
-    direction: 'row',
-    toggleSerie: true,
-    translateY: 56,
-    itemWidth: 100,
-    itemHeight: 18,
-    itemTextColor: '#999',
-    symbolSize: 18,
-    symbolShape: 'circle',
-    effects: [
-      {
-        on: 'hover',
-        style: {
-          itemTextColor: '#000',
-        },
-      },
-    ],
-  },
-];
 
 const ClicksPie = ({ data }) => {
 
@@ -83,6 +59,7 @@ const ClicksPie = ({ data }) => {
   })
 
   formattedData.push(amazonObj, facebookObj, linkedInObj, twitterObj, googleObj);
+
   formattedData.forEach((platform) => {
     platform.value = (platform.value / total).toFixed(2) * 100;
   })

@@ -32,7 +32,7 @@ const ByProduct = ({ data }) => {
   }
   console.log(finalDataFormat)
 
-    return (
+  return (
     <ResponsiveBar
       data={finalDataFormat}
       keys={['Clicks', 'Impressions']}
@@ -42,40 +42,6 @@ const ByProduct = ({ data }) => {
       valueScale={{ type: 'linear' }}
       indexScale={{ type: 'band', round: true }}
       colors={{ scheme: 'nivo' }}
-      // defs={[
-      //   {
-      //     id: 'dots',
-      //     type: 'patternDots',
-      //     background: 'inherit',
-      //     color: '#38bcb2',
-      //     size: 4,
-      //     padding: 1,
-      //     stagger: true
-      //   },
-      //   {
-      //     id: 'lines',
-      //     type: 'patternLines',
-      //     background: 'inherit',
-      //     color: '#eed312',
-      //     rotation: -45,
-      //     lineWidth: 6,
-      //     spacing: 10
-      //   }
-      // ]}
-      // fill={[
-      //   {
-      //     match: {
-      //       id: 'fries'
-      //     },
-      //     id: 'dots'
-      //   },
-      //   {
-      //     match: {
-      //       id: 'sandwich'
-      //     },
-      //     id: 'lines'
-      //   }
-      // ]}
       borderColor={{ from: 'color', modifiers: [['darker', 1.6]] }}
       axisTop={null}
       axisRight={null}
@@ -126,6 +92,6 @@ const ByProduct = ({ data }) => {
       motionStiffness={90}
       motionDamping={15}
     />)
-  };
+};
 
-  module.exports = ByProduct;
+module.exports = ByProduct;

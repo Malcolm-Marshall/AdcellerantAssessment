@@ -93,9 +93,6 @@ function HomePage() {
   return (
     <Container>
       <Row>
-        <Col style={{ display: 'flex', justifyContent: 'center', paddingTop: 10, alignContent: 'space-between' }}>
-          <h2>Products A-Z</h2>
-        </Col>
         <Col style={{ display: 'flex', justifyContent: 'flex-end', paddingTop: 10 }}>
           <h3 id="home" onClick={(e) => view(e)}>Home</h3>
         </Col>
@@ -171,15 +168,9 @@ function HomePage() {
         </> : null}
       {product ?
         <Row>
-        <Col style={{display: 'flex', justifyContent: 'center', paddingTop: 100}}>
-          <h3>Products</h3>
-        </Col>
           <Col style={{ height: '700px' }}>
             <ByProduct data={data} />
           </Col>
-        <Col style={{display: 'flex', justifyContent: 'center', paddingTop: 50}}>
-          <h3>Platforms</h3>
-        </Col>
         </Row>
         : null
       }
@@ -188,9 +179,6 @@ function HomePage() {
           <Col style={{ height: '700px' }}>
             <ByPlatform data={data} />
           </Col>
-          <Col style={{display: 'flex', justifyContent: 'center', paddingTop: 100}}>
-          <h3>Timeline</h3>
-        </Col>
         </Row>
          : null
       }

@@ -1,4 +1,3 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 const queries = require('../../database/index.js');
 
 export default function success(req, res) {
