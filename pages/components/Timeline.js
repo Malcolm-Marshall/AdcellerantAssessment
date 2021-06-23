@@ -1,89 +1,140 @@
-import React, { useState, useEffect } from 'react';
-import { Container, Row, Col } from 'react-bootstrap';
-import { ResponsiveLineCanvas } from '@nivo/line';
-import axios from 'axios';
+import React, { Component, useState, useEffect } from 'react'
+import range from 'lodash/range'
+import last from 'lodash/last'
+import { withKnobs, boolean, select } from '@storybook/addon-knobs'
+import { Defs, linearGradientDef } from '@nivo/core'
+import { area, curveMonotoneX } from 'd3-shape'
+import * as time from 'd3-time'
+import { timeFormat } from 'd3-time-format'
+import { ResponsiveLine } from '@nivo/line';
+import {Row, Container, Col} from 'react-bootstrap'
 
-const Timeline = () => {
+const commonProperties = {
+  width: 1000,
+  height: 500,
+  margin: {  top: 50, right: 130, bottom: 50, left: 60 },
+  animate: true,
+  enableSlices: 'x',
+}
 
-  const commonProperties = {
-    margin: { top: 20, right: 20, bottom: 60, left: 80 },
-    // data,
-    pointSize: 8,
-    pointColor: { theme: 'background' },
-    pointBorderWidth: 2,
-    pointBorderColor: { theme: 'background' },
+const curveOptions = ['linear', 'monotoneX', 'step', 'stepBefore', 'stepAfter']
+
+const CustomSymbol = ({ size, color, borderWidth, borderColor }) => (
+  <g>
+    <circle fill="#fff" r={size / 2} strokeWidth={borderWidth} stroke={borderColor} />
+    <circle
+      r={size / 5}
+      strokeWidth={borderWidth}
+      stroke={borderColor}
+      fill={color}
+      fillOpacity={0.35}
+    />
+  </g>
+);
+
+const Timeline = ({ data, dates }) => {
+
+  let dataFormat = {};
+
+  dates.forEach((date) => {
+    dataFormat[date.date] = { 'clicks': 0, 'impressions': 0 }
+  })
+
+  data.forEach((row) => {
+    for (let key in dataFormat) {
+      if (row.date === key) {
+        dataFormat[key].clicks += row.clicks;
+        dataFormat[key].impressions += row.impressions;
+      }
+    }
+  })
+  console.log(dataFormat)
+
+  let finalDataFormat = [
+    {
+    id: 'Clicks',
+    'color': "hsl(284, 70%, 50%)",
+    data: []
+    },
+    {
+      id: 'Impressions',
+      'color': "hsl(87, 70%, 50%)",
+      data: []
+    }
+  ];
+
+  for (let key in dataFormat) {
+    finalDataFormat[0].data.push({x: key, y: dataFormat[key].clicks})
+    finalDataFormat[1].data.push({x: key, y: dataFormat[key].impressions})
   }
 
-  const Wrapper = props => <div {...props} style={{ height: '300px', width: '600px' }} />
-
   return (
-    <ResponsiveLineCanvas
-      margin={{ top: 20, right: 20, bottom: 60, left: 80 }}
-      pointSize={8}
-      pointColor={{theme: 'background' }}
-      pointBorderWidth={2}
-      pointBorderColor={{ theme: 'background' }}
-
-      data={
-        [
-          {
-            id: 'fake corp. A',
-            data: [
-              { x: '2018-01-01', y: 7 },
-              { x: '2018-01-02', y: 5 },
-              { x: '2018-01-03', y: 11 },
-              { x: '2018-01-04', y: 9 },
-              { x: '2018-01-05', y: 12 },
-              { x: '2018-01-06', y: 16 },
-              { x: '2018-01-07', y: 13 },
-              { x: '2018-01-08', y: 13 },
-            ],
-          },
-          {
-            id: 'fake corp. B',
-            data: [
-              { x: '2018-01-04', y: 14 },
-              { x: '2018-01-05', y: 14 },
-              { x: '2018-01-06', y: 15 },
-              { x: '2018-01-07', y: 11 },
-              { x: '2018-01-08', y: 10 },
-              { x: '2018-01-09', y: 12 },
-              { x: '2018-01-10', y: 9 },
-              { x: '2018-01-11', y: 7 },
-            ],
-          },
+  <>
+  <ResponsiveLine
+    {...commonProperties}
+    data={finalDataFormat}
+    lineWidth={6}
+    xScale={{
+      type: 'time',
+      format: '%Y-%m-%d',
+      useUTC: false,
+      precision: 'day',
+    }}
+    xFormat="time:%Y-%m-%d"
+    yScale={{
+      type: 'linear', min: 'auto', max: 'auto', stacked: true, reverse: false
+    }}
+    axisLeft={{
+      legend: 'Amount',
+      legendOffset: -50,
+    }}
+    axisBottom={{
+      format: '%b %d',
+      tickValues: 'every 1 days',
+      legend: 'Day',
+      legendOffset: -15,
+    }}
+    curve={select('curve', curveOptions, 'monotoneX')}
+    enablePointLabel={true}
+    pointSymbol={CustomSymbol}
+    pointSize={16}
+    pointBorderWidth={1}
+    pointBorderColor={{
+      from: 'color',
+      modifiers: [['darker', 0.3]],
+    }}
+    useMesh={true}
+    enableSlices={false}
+    legends={[
+            {
+                anchor: 'bottom-right',
+                direction: 'column',
+                justify: false,
+                translateX: 100,
+                translateY: 0,
+                itemsSpacing: 0,
+                itemDirection: 'left-to-right',
+                itemWidth: 80,
+                itemHeight: 20,
+                itemOpacity: 0.75,
+                symbolSize: 12,
+                symbolShape: 'circle',
+                symbolBorderColor: 'rgba(0, 0, 0, .5)',
+                effects: [
+                    {
+                        on: 'hover',
+                        style: {
+                            itemBackground: 'rgba(0, 0, 0, .03)',
+                            itemOpacity: 1
+                        }
+                    }
+                ]
+            }
         ]}
-      xScale={{
-        type: 'time',
-        format: '%Y-%m-%d',
-        precision: 'day',
-      }}
-      xFormat="time:%Y-%m-%d"
-      yScale={{
-        type: 'linear',
-        stacked: false,
-      }}
-      axisLeft={{
-        legend: 'linear scale',
-        legendOffset: 12,
-      }}
-      axisBottom={{
-        format: '%b %d',
-        tickValues: 'every 2 days',
-        legend: 'time scale',
-        legendOffset: -12,
-      }}
-      enablePointLabel={true}
-      pointSize={16}
-      pointBorderWidth={1}
-      pointBorderColor={{
-        from: 'color',
-        modifiers: [['darker', 0.3]],
-      }}
-      useMesh={true}
-      enableSlices={false}
-    />
+  />
+  </>
+
   )
-}
+};
 
 module.exports = Timeline;

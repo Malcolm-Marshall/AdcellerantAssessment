@@ -1,10 +1,11 @@
 const mysql = require('mysql');
 const data = require('./data.js');
+const login = require('./config.js');
 
 const connection = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: 'password',
+  host: login.host,
+  user: login.user,
+  password: login.password,
   database: 'productInfo'
 });
 
@@ -12,7 +13,7 @@ connection.connect((err) => {
   if (err) {
     console.log(err);
   } else {
-    console.log('Connected to MySQL!')
+    console.log(`Connected to MySQL!`)
   }
 });
 
@@ -53,10 +54,32 @@ const getDates = (req, res) => {
     };
     res.status(200).send(result);
   })
-}
+};
+
+const getMaxClicks = (req, res) => {
+  connection.query('SELECT * FROM productData WHERE clicks = (SELECT MAX(clicks) FROM productData)', function (err, result) {
+    if (err) {
+      console.log(err);
+      res.status(400).send(err);
+    };
+    res.status(200).send(result);
+  });
+};
+
+const getMaxImpressions = (req, res) => {
+  connection.query('SELECT * FROM productData WHERE impressions = (SELECT MAX(impressions) FROM productData)', function (err, result) {
+    if (err) {
+      console.log(err);
+      res.status(400).send(err);
+    };
+    res.status(200).send(result);
+  });
+};
 
 module.exports = {
   getData,
   getAmazon,
-  getDates
+  getDates,
+  getMaxClicks,
+  getMaxImpressions
 }
