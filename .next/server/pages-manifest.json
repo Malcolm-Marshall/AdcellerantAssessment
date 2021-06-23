@@ -2,9 +2,5 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/api/getData": "pages/api/getData.js",
-  "/api/getDates": "pages/api/getDates.js",
-  "/": "pages/index.js",
-  "/api/getMaxImpressions": "pages/api/getMaxImpressions.js",
-  "/api/getMaxClicks": "pages/api/getMaxClicks.js"
+  "/": "pages/index.js"
 }

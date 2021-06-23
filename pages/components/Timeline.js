@@ -92,7 +92,8 @@ const Timeline = ({ data, dates }) => {
       format: '%b %d',
       tickValues: 'every 1 days',
       legend: 'Day',
-      legendOffset: -15,
+      legendOffset: 35,
+      legendPosition: 'middle',
     }}
     curve={select('curve', curveOptions, 'monotoneX')}
     enablePointLabel={true}
