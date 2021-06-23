@@ -1,5 +1,9 @@
 # AdcellerantAssessment
 
+### Tech Used:
+JavaScript and React frontend, connected to a Next.js server and a MySQL database.
+Libraries used include React-Bootstap for framework, and nivo for visuals.
+
 ## To view web page:
 
 ### In the database directory, add a file named config.js containing your mysql login information
