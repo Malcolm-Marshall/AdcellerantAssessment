@@ -18,18 +18,18 @@ const login = {
 module.exports = login;
 ```
 
-### To initialize database, from the root directory in the terminal run
+### To initialize database, from the root directory in the terminal
 ```
 npm run db
 ```
 
-### To seed database, run 
+### To seed database 
 
 ```
 npm run seed
 ```
 
-### Next, to start developer server run
+### Next, to start developer server
 ```
 npm run dev
 ```
